@@ -1,7 +1,7 @@
 import { Application, Assets, Sprite, Spritesheet, Text } from "pixi.js";
 import { PlayerType } from "../PlayerType";
 import { Screen } from "../Screen";
-import { startGame } from "../main";
+import { sounds, startGame } from "../main";
 
 class MenuItem {
     screenText: string
@@ -35,8 +35,6 @@ export class MainMenuScreen extends Screen {
     private cursor = 0
 
     private goToGameState = -1
-
-    private startGameSound = new Howl({ src: ['sounds/start_game.mp3'], volume: 0.5 })
 
     constructor(app: Application, spritesheet: Spritesheet) {
         super(app)
@@ -127,7 +125,7 @@ export class MainMenuScreen extends Screen {
 
     private startGame() {
         this.goToGameState = 204
-        this.startGameSound.play()
+        sounds.startGame.play()
     }
 }
 

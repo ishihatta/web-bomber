@@ -6,6 +6,7 @@ import { Bomb } from "./Bomb";
 import { Wall } from "./Wall";
 import { PlayerInput, PlayerMove, PlayerOperation } from "./PlayerOperation";
 import { AnimatedSprite, Sprite } from "pixi.js";
+import { sounds } from "../main";
 
 enum PlayerDirection {
     DOWN, LEFT, UP, RIGHT
@@ -183,12 +184,12 @@ export class Player extends LightSprite {
             this.moveTime += 1 / 60
             if (!this.walkSoundIsPlaying) {
                 this.walkSoundIsPlaying = true
-                this.walkSoundId = this.gameScreen.walkSound.play()
+                this.walkSoundId = sounds.walk.play()
             }
         } else {
             if (this.walkSoundIsPlaying) {
                 this.walkSoundIsPlaying = false
-                this.gameScreen.walkSound.stop(this.walkSoundId)
+                sounds.walk.stop(this.walkSoundId)
             }
         }
         this._sprite.x = this._x
@@ -222,7 +223,7 @@ export class Player extends LightSprite {
                 powerUpItems.splice(i, 1)
                 powerUpItem.sprite().removeFromParent()
                 this.power++
-                this.gameScreen.powerUpSound.play()
+                sounds.powerUp.play()
                 this.gameScreen.setPlayerText(this.playerNumber)
             }
         }
@@ -241,7 +242,7 @@ export class Player extends LightSprite {
             }
             if (okFlag) {
                 this.gameScreen.bombs.push(new Bomb(this.gameScreen, bx, by, this.power))
-                this.gameScreen.setBombSound.play()
+                sounds.setBomb.play()
             }
         }
 
@@ -250,11 +251,11 @@ export class Player extends LightSprite {
             const explosion = this.gameScreen.explosions[i]
             if (Math.abs(explosion.x - this._x) < 28 && Math.abs(explosion.y - this._y) < 28) {
                 this.deathState = 1
-                this.gameScreen.bgmMusic.stop()
-                this.gameScreen.crashSound.play()
+                sounds.bgm.stop()
+                sounds.crash.play()
                 if (this.walkSoundIsPlaying) {
                     this.walkSoundIsPlaying = false
-                    this.gameScreen.walkSound.stop(this.walkSoundId)
+                    sounds.walk.stop(this.walkSoundId)
                 }
                 break
             }

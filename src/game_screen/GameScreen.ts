@@ -6,10 +6,9 @@ import { Explosion, ExplosionPosition } from './Explosion'
 import { PowerUpItem } from './PowerUpItem'
 import { Constants } from './Constants'
 import { LightSprite } from './LightSprite'
-import { Howl } from 'howler'
 import { Screen } from '../Screen'
 import { deinitKeyInput, initKeyInput, isKeyEscapePressing, isKeySpacePressing } from './KeyInput'
-import { startMainMenu } from '../main'
+import { sounds, startMainMenu } from '../main'
 import { PlayerType } from '../PlayerType'
 import { PlayerOperation, getPlayerOperation } from './PlayerOperation'
 
@@ -53,16 +52,6 @@ export class GameScreen extends Screen {
     // ゲーム終了時のテキスト
     gameEndText: Text = new Text('', { fontFamily: 'Arial', fontSize: 32, fill: 0xffffff, fontWeight: 'bold' })
 
-    // 効果音
-    explosionSound = new Howl({ src: ['sounds/explosion.mp3'] })
-    setBombSound = new Howl({ src: ['sounds/set_bomb.mp3'] })
-    walkSound = new Howl({ src: ['sounds/walk.mp3'], loop: true })
-    powerUpSound = new Howl({ src: ['sounds/power_up.mp3'] })
-    crashSound = new Howl({ src: ['sounds/crash.mp3'] })
-
-    // BGM
-    bgmMusic = new Howl({ src: ['sounds/Daily_News.mp3'], html5: true, loop: true, volume: 0.7 })
-
     frameCount = 0
 
     constructor(app: Application, spritesheet: Spritesheet, playerType1: PlayerType, playerType2: PlayerType) {
@@ -98,12 +87,12 @@ export class GameScreen extends Screen {
     onClose(): void {
         super.onClose()
         deinitKeyInput()
-        this.explosionSound.stop()
-        this.setBombSound.stop()
-        this.walkSound.stop()
-        this.powerUpSound.stop()
-        this.crashSound.stop()
-        this.bgmMusic.stop()
+        sounds.explosion.stop()
+        sounds.setBomb.stop()
+        sounds.walk.stop()
+        sounds.powerUp.stop()
+        sounds.crash.stop()
+        sounds.bgm.stop()
         this.playerOperation1.free()
         this.playerOperation2.free()
     }
@@ -176,14 +165,14 @@ export class GameScreen extends Screen {
         this.gameEndText.text = ''
 
         // 効果音の初期化
-        this.explosionSound.stop()
-        this.setBombSound.stop()
-        this.walkSound.stop()
-        this.powerUpSound.stop()
-        this.crashSound.stop()
+        sounds.explosion.stop()
+        sounds.setBomb.stop()
+        sounds.walk.stop()
+        sounds.powerUp.stop()
+        sounds.crash.stop()
 
         // // BGMの再生
-        this.bgmMusic.play()
+        sounds.bgm.play()
 
         this.startUpTimer = 30
     }
@@ -226,7 +215,7 @@ export class GameScreen extends Screen {
 
         // 爆発の生成
         if (newExplodeBomb.length > 0) {
-            this.explosionSound.play()
+            sounds.explosion.play()
             newExplodeBomb.forEach(bomb => {
                 this.explosions.push(new Explosion(this, bomb.x, bomb.y, ExplosionPosition.CENTER))
                 this.expandExplosion(bomb, -1, 0)
