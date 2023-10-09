@@ -12,16 +12,23 @@
 
 # ビルド
 
+事前に [Node.js](https://nodejs.org/ja), [Rust](https://rustup.rs/), [wasm-pack](https://rustwasm.github.io/wasm-pack/) をインストールしてください。
+準備ができたらこのリポジトリを clone して以下のコマンドを実行してください。
+
 ```shell
 npm install
 npm run wasm
 npm run build
 ```
 
-# 実行
+`npm run wasm` コマンドは Rust のコードをコンパイルして WASM に変換し、Node モジュールとしてインストールします。これが終わっていないと `npm run build` でのビルドに失敗します。
+
+ビルド結果は `dist` ディレクトリ配下に出力されます。静的ファイルだけなので適当な Web サーバにデプロイすれば動きます。
+
+# ローカルサーバで実行
 
 ```shell
-cargo run dev
+npm run dev
 ```
 
 # 操作方法（キーアサイン）
