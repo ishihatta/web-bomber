@@ -5,15 +5,14 @@
   "author": "Kyohei Ishihata <ishihata.k.tech@gmail.com>",
   "type": "module",
   "scripts": {
-    "wasm": "wasm-pack build ./bomber-ai --target web",
+    "wasm": "wasm-pack build ./bomber-ai --target web && npm install ./bomber-ai/pkg/ --no-save",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vite-plugin-wasm-pack": "^0.1.12"
+    "vite": "^4.4.5"
   },
   "dependencies": {
     "@types/howler": "^2.2.9",
