@@ -8,9 +8,10 @@ import { Constants } from './Constants'
 import { LightSprite } from './LightSprite'
 import { Screen } from '../Screen'
 import { deinitKeyInput, initKeyInput, isKeyEscapePressing, isKeySpacePressing } from './KeyInput'
-import { sounds, startMainMenu } from '../main'
+import { startMainMenu } from '../main'
 import { PlayerType } from '../PlayerType'
 import { PlayerOperation, getPlayerOperation } from './PlayerOperation'
+import * as AppResource from "../AppResource";
 
 enum State {
     PLAYING,
@@ -54,7 +55,7 @@ export class GameScreen extends Screen {
 
     frameCount = 0
 
-    constructor(app: Application, spritesheet: Spritesheet, playerType1: PlayerType, playerType2: PlayerType) {
+    constructor(app: Application, playerType1: PlayerType, playerType2: PlayerType) {
         super(app)
 
         this.playerOperation1 = getPlayerOperation(playerType1, 0, this)
@@ -66,7 +67,7 @@ export class GameScreen extends Screen {
         // 背景色
         app.renderer.background.color = 0x009900
 
-        this.spritesheet = spritesheet
+        this.spritesheet = AppResource.spritesheet
         this.baseStage.addChild(this.itemContainer)
         this.baseStage.addChild(this.playerContainer)
 
@@ -87,12 +88,12 @@ export class GameScreen extends Screen {
     onClose(): void {
         super.onClose()
         deinitKeyInput()
-        sounds.explosion.stop()
-        sounds.setBomb.stop()
-        sounds.walk.stop()
-        sounds.powerUp.stop()
-        sounds.crash.stop()
-        sounds.bgm.stop()
+        AppResource.sounds.explosion.stop()
+        AppResource.sounds.setBomb.stop()
+        AppResource.sounds.walk.stop()
+        AppResource.sounds.powerUp.stop()
+        AppResource.sounds.crash.stop()
+        AppResource.sounds.bgm.stop()
         this.playerOperation1.free()
         this.playerOperation2.free()
     }
@@ -165,14 +166,14 @@ export class GameScreen extends Screen {
         this.gameEndText.text = ''
 
         // 効果音の初期化
-        sounds.explosion.stop()
-        sounds.setBomb.stop()
-        sounds.walk.stop()
-        sounds.powerUp.stop()
-        sounds.crash.stop()
+        AppResource.sounds.explosion.stop()
+        AppResource.sounds.setBomb.stop()
+        AppResource.sounds.walk.stop()
+        AppResource.sounds.powerUp.stop()
+        AppResource.sounds.crash.stop()
 
         // // BGMの再生
-        sounds.bgm.play()
+        AppResource.sounds.bgm.play()
 
         this.startUpTimer = 30
     }
@@ -215,7 +216,7 @@ export class GameScreen extends Screen {
 
         // 爆発の生成
         if (newExplodeBomb.length > 0) {
-            sounds.explosion.play()
+            AppResource.sounds.explosion.play()
             newExplodeBomb.forEach(bomb => {
                 this.explosions.push(new Explosion(this, bomb.x, bomb.y, ExplosionPosition.CENTER))
                 this.expandExplosion(bomb, -1, 0)

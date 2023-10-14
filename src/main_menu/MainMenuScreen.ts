@@ -1,7 +1,8 @@
-import { Application, Assets, Sprite, Spritesheet, Text } from "pixi.js";
+import { Application, Assets, Sprite, Text } from "pixi.js";
 import { PlayerType } from "../PlayerType";
 import { Screen } from "../Screen";
-import { sounds, startGame } from "../main";
+import { startGame } from "../main";
+import * as AppResource from "../AppResource";
 
 class MenuItem {
     screenText: string
@@ -36,7 +37,7 @@ export class MainMenuScreen extends Screen {
 
     private goToGameState = -1
 
-    constructor(app: Application, spritesheet: Spritesheet) {
+    constructor(app: Application) {
         super(app)
 
         // 背景色
@@ -62,7 +63,7 @@ export class MainMenuScreen extends Screen {
             }
 
             // カーソル
-            const textureCursor = spritesheet.textures['pl1_1.png']
+            const textureCursor = AppResource.spritesheet!.textures['pl1_1.png']
             this.cursorSprite = new Sprite(textureCursor)
             this.cursorSprite.x = MainMenuScreen.MENU_ITEM_X - 40
             this.setCursorLocation()
@@ -125,7 +126,7 @@ export class MainMenuScreen extends Screen {
 
     private startGame() {
         this.goToGameState = 204
-        sounds.startGame.play()
+        AppResource.sounds.startGame.play()
     }
 }
 
