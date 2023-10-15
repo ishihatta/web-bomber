@@ -10,6 +10,9 @@
 * 爆弾は無限に置ける
 * 死んだら負け
 
+# プレイ動画
+[プレイ動画（AI vs AI）](https://github.com/ishihatta/web-bomber/assets/40629744/b3f485d1-f1a8-4673-a75c-dd60062f4c69)
+
 # 操作方法（キーアサイン）
 
 |       | Player 1 | Player 2 |
