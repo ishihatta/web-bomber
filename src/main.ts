@@ -31,6 +31,7 @@ export function startGame(playerType1: PlayerType, playerType2: PlayerType) {
 
 currentScreen = new LoadingScreen(app)
 
+app.ticker.maxFPS = 60
 app.ticker.add(() => {
     currentScreen?.onNextFrame()
 })
