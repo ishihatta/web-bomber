@@ -29,6 +29,7 @@ export class MainMenuScreen extends Screen {
     ]
 
     private logoSprite: Sprite|null = null
+    private controlsSprite: Sprite|null = null
     private itemText: Text[] = Array(MainMenuScreen.menuItems.length)
     private cursorSprite: Sprite|null = null
 
@@ -46,12 +47,21 @@ export class MainMenuScreen extends Screen {
         // キー入力されていない状態にする
         pressedKeyCode = ''
 
-        // ロゴ
-        Assets.load('images/logo.png').then(texture => {
-            this.logoSprite = new Sprite(texture)
+        // ロゴと操作画像の読み込み
+        Assets.add('logo', 'images/logo.png')
+        Assets.add('controls', 'images/controls.png')
+        Assets.load(['logo', 'controls']).then(res => {
+            // ロゴ
+            this.logoSprite = new Sprite(res['logo'])
             this.logoSprite.x = (Screen.WIDTH - this.logoSprite.width) / 2
             this.logoSprite.y = Screen.HEIGHT / 4 - this.logoSprite.height / 2
             this.baseStage.addChild(this.logoSprite)
+
+            // 操作系
+            this.controlsSprite = new Sprite(res['controls'])
+            this.controlsSprite.x = Screen.WIDTH - this.controlsSprite.width - 10
+            this.controlsSprite.y = Screen.HEIGHT - this.controlsSprite.height - 10
+            this.baseStage.addChild(this.controlsSprite)
 
             // メニューアイテム
             for (let i = 0; i < MainMenuScreen.menuItems.length; i++) {
