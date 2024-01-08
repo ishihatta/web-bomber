@@ -17,11 +17,11 @@ class MenuItem {
 }
 
 export class MainMenuScreen extends Screen {
-    private static MENU_ITEM_X = 300
-    private static MENU_ITEM_Y_START = 260
-    private static MENU_ITEM_Y_STEP = 40
+    private static readonly MENU_ITEM_X = 300
+    private static readonly MENU_ITEM_Y_START = 260
+    private static readonly MENU_ITEM_Y_STEP = 40
 
-    private static menuItems: MenuItem[] = [
+    private static readonly menuItems: MenuItem[] = [
         new MenuItem("HUMAN VS AI", PlayerType.HUMAN, PlayerType.AI),
         new MenuItem("AI VS HUMAN", PlayerType.AI, PlayerType.HUMAN),
         new MenuItem("HUMAN VS HUMAN", PlayerType.HUMAN, PlayerType.HUMAN),

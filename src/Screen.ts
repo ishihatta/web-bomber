@@ -1,8 +1,8 @@
 import { Application, Container } from "pixi.js";
 
 export class Screen {
-    static WIDTH = 800
-    static HEIGHT = 480
+    static readonly WIDTH = 800
+    static readonly HEIGHT = 480
 
     app: Application
     baseStage: Container

@@ -21,8 +21,8 @@ enum State {
 }
 
 export class GameScreen extends Screen {
-    static MAP_WIDTH = 25
-    static MAP_HEIGHT = 15
+    static readonly MAP_WIDTH = 25
+    static readonly MAP_HEIGHT = 15
 
     private state: State = State.PLAYING
     private startUpTimer: number = 30
@@ -172,7 +172,7 @@ export class GameScreen extends Screen {
         AppResource.sounds.powerUp.stop()
         AppResource.sounds.crash.stop()
 
-        // // BGMの再生
+        // BGMの再生
         AppResource.sounds.bgm.play()
 
         this.startUpTimer = 30
