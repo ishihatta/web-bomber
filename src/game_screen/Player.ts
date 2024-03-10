@@ -3,7 +3,6 @@ import { GameScreen } from "./GameScreen";
 import { PowerUpItem } from "./PowerUpItem";
 import { Constants } from "./Constants";
 import { Bomb } from "./Bomb";
-import { Wall } from "./Wall";
 import { PlayerInput, PlayerMove, PlayerOperation } from "./PlayerOperation";
 import { AnimatedSprite, Sprite } from "pixi.js";
 import * as AppResource from "../AppResource";
@@ -90,92 +89,41 @@ export class Player extends LightSprite {
                 break
         }
 
-        // 壁との当たり判定
-        const detectWalls = Array<Wall>()
-        this.gameScreen.walls.forEach(wall => {
-            if (Math.abs(wall.x - this._x) < Constants.CHARACTER_SIZE && Math.abs(wall.y - this._y) < Constants.CHARACTER_SIZE) {
-                detectWalls.push(wall)
-            }
+        // 壁や爆弾との当たり判定
+        const detectedObjects = Array<LightSprite>();
+        [this.gameScreen.walls, this.gameScreen.bombs].forEach(objs => {
+            objs.forEach(obj => {
+                // ぶつかっているいて
+                if (Math.abs(obj.x - this._x) < Constants.CHARACTER_SIZE && Math.abs(obj.y - this._y) < Constants.CHARACTER_SIZE) {
+                    // かつ同じ升目になくて
+                    if (obj.x / Constants.CHARACTER_SIZE != Math.floor((this._x + Constants.CHARACTER_SIZE / 2) / Constants.CHARACTER_SIZE) ||
+                        obj.y / Constants.CHARACTER_SIZE != Math.floor((this._y + Constants.CHARACTER_SIZE / 2) / Constants.CHARACTER_SIZE)) {
+                        // かつ移動先にあると「衝突した」
+                        if (this.playerInput?.move == PlayerMove.LEFT && obj.x < this._x ||
+                            this.playerInput?.move == PlayerMove.RIGHT && obj.x > this._x ||
+                            this.playerInput?.move == PlayerMove.UP && obj.y < this._y ||
+                            this.playerInput?.move == PlayerMove.DOWN && obj.y > this._y) {
+                            detectedObjects.push(obj)
+                        }
+                    }
+                }
+            })
         })
-        if (detectWalls.length > 0) {
+        if (detectedObjects.length > 0) {
             this._x = oldX
             this._y = oldY
         }
-        if (detectWalls.length == 1) {
-            const wall = detectWalls[0]
+        if (detectedObjects.length == 1) {
+            const obj = detectedObjects[0]
             if (this.playerInput.move == PlayerMove.LEFT ||
                     this.playerInput.move == PlayerMove.RIGHT) {
-                if (this._y < wall.y) this._y -= Player.WALK_SPEED
-                if (this._y > wall.y) this._y += Player.WALK_SPEED
+                if (this._y < obj.y) this._y -= Player.WALK_SPEED
+                if (this._y > obj.y) this._y += Player.WALK_SPEED
             }
             else if (this.playerInput.move == PlayerMove.UP ||
                     this.playerInput.move == PlayerMove.DOWN) {
-                if (this._x < wall.x) this._x -= Player.WALK_SPEED
-                if (this._x > wall.x) this._x += Player.WALK_SPEED
-            }
-        }
-
-        // 爆弾との当たり判定
-        // 32で割り切れる場所からそうでない場所に移動しようとした場合は、移動先に爆弾があったら動かさない
-        if (this._x != oldX && oldX % Constants.CHARACTER_SIZE == 0) {
-            const bx = this._x > oldX ? oldX + Constants.CHARACTER_SIZE : oldX - Constants.CHARACTER_SIZE
-            for (let i = this.gameScreen.bombs.length - 1; i >= 0; i--) {
-                const bomb = this.gameScreen.bombs[i]
-                if (bomb.x == bx && bomb.y == this._y) {
-                    this._x = oldX
-                    break
-                }
-            }
-        } else if (this._y != oldY && oldY % Constants.CHARACTER_SIZE == 0) {
-            const by = this._y > oldY ? oldY + Constants.CHARACTER_SIZE : oldY - Constants.CHARACTER_SIZE
-            for (let i = this.gameScreen.bombs.length - 1; i >= 0; i--) {
-                const bomb = this.gameScreen.bombs[i]
-                if (bomb.y == by && bomb.x == this._x) {
-                    this._x = oldX
-                    break
-                }
-            }
-        }
-        // 32で割り切れない場所から移動しようとした場合は、一番近いマス以外のマスに移動しようとしている場合、移動先に爆弾があったら動かさない
-        else if (this._x != oldX) {
-            let bx = 0
-            if (oldX % Constants.CHARACTER_SIZE < Constants.CHARACTER_SIZE / 2) {
-                if (this._x > oldX) {
-                    bx = Math.floor(oldX / Constants.CHARACTER_SIZE + 1) * Constants.CHARACTER_SIZE
-                }
-            } else {
-                if (this._x < oldX) {
-                    bx = Math.floor(oldX / Constants.CHARACTER_SIZE) * Constants.CHARACTER_SIZE
-                }
-            }
-            if (bx != 0) {
-                for (let i = this.gameScreen.bombs.length - 1; i >= 0; i--) {
-                    const bomb = this.gameScreen.bombs[i]
-                    if (bomb.x == bx && bomb.y == this._y) {
-                        this._x = oldX
-                        break
-                    }
-                }
-            }
-        } else if (this._y != oldY) {
-            let by = 0
-            if (oldY % Constants.CHARACTER_SIZE < Constants.CHARACTER_SIZE / 2) {
-                if (this._y > oldY) {
-                    by = Math.floor(oldY / Constants.CHARACTER_SIZE + 1) * Constants.CHARACTER_SIZE
-                }
-            } else {
-                if (this._y < oldY) {
-                    by = Math.floor(oldY / Constants.CHARACTER_SIZE) * Constants.CHARACTER_SIZE
-                }
-            }
-            if (by != 0) {
-                for (let i = this.gameScreen.bombs.length - 1; i >= 0; i--) {
-                    const bomb = this.gameScreen.bombs[i]
-                    if (bomb.x == this._x && bomb.y == by) {
-                        this._y = oldY
-                        break
-                    }
-                }
+                if (this._x < obj.x) this._x -= Player.WALK_SPEED
+                if (this._x > obj.x) this._x += Player.WALK_SPEED
             }
         }
 
